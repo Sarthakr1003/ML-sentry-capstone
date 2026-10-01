@@ -1,0 +1,12 @@
+pandas
+scikit-learn
+joblib
+evidently
+fairlearn
+fastapi
+uvicorn
+streamlit
+langgraph
+groq
+ollama
+python-dotenv
