@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlsentry"
+version = "0.1.0"
+description = "Open-source, model-agnostic agentic governance layer that watches a live model's metrics in MLflow and alerts when they go out of bounds"
+readme = "README.md"
+requires-python = ">=3.11"
+# Only what ML Sentry itself needs. The demo's extra libraries are in requirements.txt.
+dependencies = [
+    "python-dotenv",
+    "requests",
+    "langgraph",
+    "groq",
+    "ollama",
+]
+
+[project.scripts]
+mlsentry = "mlsentry.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -224,3 +224,9 @@ data/processed/
 venv/
 __pycache__/
 context/
+
+# ML Sentry runtime state and the demo MLflow server
+state/
+mlruns/
+mlartifacts/
+mlflow.db
