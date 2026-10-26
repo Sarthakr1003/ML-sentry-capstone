@@ -1,0 +1,13 @@
+.git
+.env
+venv
+data
+models
+mlruns
+mlartifacts
+state
+context
+examples
+tests
+docs
+**/__pycache__
