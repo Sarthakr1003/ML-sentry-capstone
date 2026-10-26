@@ -7,11 +7,14 @@ ML Sentry is an open-source, model-agnostic governance layer that runs in Docker
 
 Owner: Sarthak Ramachandra (B.Tech AI&ML, DSU). Teammates Rishabh, Saumyaa, Sonika. Supervisor Dr. Abdul Haq Nalband.
 
-## Current state (25 Oct 2026)
-- Done and pushed: repo restructure, `.gitignore`, `.env.example`, `src/mlsentry/config.py` (`load_config()`).
-- **Demo dataset just changed to California Housing (regression)**, because teammate Rishabh's ML Sentry repo is regression-only. German Credit files in `examples/german_credit/` and the column names in `src/mlsentry/injection.py` are now outdated.
-- `context/data_prep.py` and `context/train_baseline.py` are the new California Housing scripts. Sarthak may not have saved them in the repo yet: check `examples/california_housing/`; if missing, copy them there (do not rewrite them differently).
-- Next: run them and check the metrics (expect RMSE about 0.45-0.5, R2 about 0.83-0.85), make sure `.gitignore` has `data/processed/` and `models/`, commit and push, then rewrite `injection.py`, then MLflow + `simulate.py` + poller.
+## Current state (26 Oct 2026)
+- **Phase 1 code is built and pushed** (on 26 Oct Sarthak asked Claude to write all the code; he learns it afterwards, so the next job is walking him through each module and quizzing him).
+- ML Sentry core in `src/mlsentry/`: `config.py`, `mlflow_reader.py` (MLflow REST), `storage.py` (SQLite), `checker.py` (MAX/MIN limits + rule severity), `agent.py` (LangGraph gather -> judge -> write; Groq -> Ollama -> rules), `alerts.py` (console/Slack/Telegram), `__main__.py` (poll loop, `python -m mlsentry`). Installed with `pip install -e .` (pyproject.toml).
+- Demo in `examples/california_housing/`: `data_prep.py`, `train_baseline.py` (RMSE 0.476, R2 0.826), `injection.py` (drift/decay/bias), `simulate.py` (batches -> MLflow, PSI via Evidently), `retrain.py`. German Credit files in `examples/german_credit/` are legacy.
+- Docker: `Dockerfile`, `docker-compose.yml` written but **not yet built/tested** (Docker Desktop was not running).
+- Docs in `docs/`: installation, configuration, running, scenarios, troubleshooting. Tests in `tests/` (`python -m pytest -q`).
+- Sarthak's own `.env` still has the old German Credit settings (`METRICS=accuracy,f1`, `*_THRESHOLD`): it must be updated from `.env.example`. Testing used `state/test.env` via `MLSENTRY_ENV_FILE`.
+- Open: test Docker, real Slack webhook and Groq key, update the KSCST doc for regression, questions for Rishabh/supervisor (PROJECT_CONTEXT.md section 10).
 
 ## How to work with Sarthak (IMPORTANT, overrides your default of doing everything)
 - He is learning and must be able to defend every line at the viva. Explain in plain language, from scratch, before acting. Be concise.
