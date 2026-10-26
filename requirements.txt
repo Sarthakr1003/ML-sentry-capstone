@@ -10,3 +10,4 @@ langgraph
 groq
 ollama
 python-dotenv
+mlflow
