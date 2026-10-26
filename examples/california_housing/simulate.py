@@ -61,6 +61,15 @@ def inject(batch: pd.DataFrame, scenario: str, args) -> pd.DataFrame:
     return batch
 
 
+def add_fault_args(parser: argparse.ArgumentParser) -> None:
+    """How strong each fault is. Shared with retrain.py so both use the same fault."""
+    parser.add_argument("--drift-col", default="MedInc")
+    parser.add_argument("--drift-shift", type=float, default=2.0)
+    parser.add_argument("--decay-factor", type=float, default=1.3)
+    parser.add_argument("--bias-group", default="coastal")
+    parser.add_argument("--bias-factor", type=float, default=1.4)
+
+
 def evaluate(model, features: list, batch: pd.DataFrame, reference: pd.DataFrame) -> dict:
     """Score one batch: error metrics, per-group error gap and feature drift."""
     pred = model.predict(batch[features])
@@ -103,16 +112,13 @@ def main() -> None:
     parser.add_argument("--delay", type=float, default=3.0, help="seconds to wait between batches")
     parser.add_argument("--model", default="models/baseline.joblib", help="model file, relative to the repo root")
     parser.add_argument("--label", default="", help="extra tag for these runs, e.g. after-retrain")
-    parser.add_argument("--drift-col", default="MedInc")
-    parser.add_argument("--drift-shift", type=float, default=2.0)
-    parser.add_argument("--decay-factor", type=float, default=1.3)
-    parser.add_argument("--bias-group", default="coastal")
-    parser.add_argument("--bias-factor", type=float, default=1.4)
+    add_fault_args(parser)
     args = parser.parse_args()
 
     saved = joblib.load(ROOT / args.model)
     model, features = saved["model"], saved["features"]
-    reference = pd.read_csv(DATA_DIR / "reference.csv")
+    # A retrained model carries its own reference data (the "new normal"); the baseline uses reference.csv
+    reference = pd.read_csv(ROOT / saved.get("reference", "data/processed/reference.csv"))
     live = pd.read_csv(DATA_DIR / "live.csv")
 
     mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
