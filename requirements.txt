@@ -11,3 +11,4 @@ groq
 ollama
 python-dotenv
 mlflow
+pytest
