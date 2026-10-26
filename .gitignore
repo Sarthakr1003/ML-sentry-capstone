@@ -223,3 +223,4 @@ data/processed/
 .env
 venv/
 __pycache__/
+context/
