@@ -45,6 +45,11 @@ Ollama is not running (`ollama serve`, or open the Ollama app), the model is not
 or the model gave an answer that was not valid JSON. The first call after a while can be slow because the model is loading.
 The built-in rules take over; the alert says "judged by rules".
 
+**`ollama could not judge this run (llama-server process has terminated: exit status 0xc0000409 ... CUDA error ...)`**
+Ollama itself crashed on the graphics card while loading the model, usually on the first request or when another
+program is using the GPU. Nothing is wrong with ML Sentry; the rules handle that run and the next run normally works.
+If it keeps happening, update Ollama, close other GPU-heavy programs, or use a smaller model in `OLLAMA_MODEL`.
+
 ## Alerts
 
 **`Could not send the alert to slack: the service answered HTTP 403/404`**
@@ -63,8 +68,17 @@ The alert is always printed to the console and stored in SQLite even when a chan
 **`failed to connect to the docker API` / `cannot find the file specified ... dockerDesktopLinuxEngine`**
 Docker Desktop is not running. Start it and wait until it says "Engine running".
 
+**Docker Desktop shows an error and quits: `initializing Inference manager ... dockerInference: The file cannot be accessed by the system`**
+A leftover file from an earlier Docker session is locked. Run `wsl --shutdown`, delete
+`%LOCALAPPDATA%\Docker\run\dockerInference`, then start Docker Desktop again. Updating Docker Desktop also helps.
+
 **The container keeps restarting**
 Run `docker compose logs mlsentry`. Usually a settings problem (see above).
+
+**Port 5000 or 11434 is already in use / ML Sentry reads the wrong MLflow or Ollama**
+Another program or container is using the same port (check with `docker ps`). Either stop it while you use ML Sentry
+(`docker stop <name>`), or run your MLflow on another port and change `MLFLOW_TRACKING_URI` and
+`DOCKER_MLFLOW_TRACKING_URI` to match, e.g. `http://localhost:5001` and `http://host.docker.internal:5001`.
 
 ## The demo
 
