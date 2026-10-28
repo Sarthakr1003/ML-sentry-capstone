@@ -90,9 +90,9 @@ Run locally (26 Oct) and inside Docker (27 Oct): both raised the expected alerts
 
 | # | Task | Time |
 |---|---|---|
-| 1 | Update your own `.env` from `.env.example` (it still has the old German Credit settings), keeping your keys | 10 min |
-| 2 | Add a Groq key and check Groq judges the alerts | 10 min |
-| 3 | Create a Slack incoming webhook and check an alert arrives | 20 min |
+| 1 | ~~Update your own `.env` from `.env.example`~~ done 28 Oct | |
+| 2 | ~~Add a Groq key~~ done 28 Oct: model `openai/gpt-oss-120b` (Groq retired `llama-3.3-70b-versatile`) | |
+| 3 | ~~Slack incoming webhook~~ done 28 Oct: live drift run, 5/5 critical alerts judged by Groq reached #all-ml-sentry, RECOVERED after retraining | |
 | 4 | Stop the ragops containers and do a full Docker demo dry run on the normal ports | 30 min |
 | 5 | Learn the code module by module, with quizzes, for the viva | 1.5-2 days |
 | 6 | Update the presentation to the final design (Docker layer, MLflow, regression demo) | half a day |
