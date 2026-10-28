@@ -11,7 +11,7 @@ ML Sentry work with any model: you tell it, in `.env`, what to watch.
 
 | Setting | Example | Meaning |
 |---|---|---|
-| `MLFLOW_TRACKING_URI` | `http://localhost:5000` | Address of your MLflow server |
+| `MLFLOW_TRACKING_URI` | `http://127.0.0.1:5000` | Address of your MLflow server. Prefer `127.0.0.1` to `localhost` on Windows (see troubleshooting.md) |
 | `MLFLOW_EXPERIMENT` | `california-housing-demo` | The MLflow experiment your model logs its evaluations to |
 
 ML Sentry treats every **finished run** in that experiment as one evaluation result.
@@ -37,8 +37,8 @@ F1_MIN=0.85
 
 ### How to pick the limits
 Look at your model's normal numbers first, then set each limit a little outside the normal range.
-For the demo the healthy batches had RMSE 0.44-0.50, R² 0.84-0.85, group gap up to 0.09 and PSI up to 0.05,
-so the limits are RMSE 0.60, R² 0.70, gap 0.20 and PSI 0.20. A PSI above 0.2 is the common rule of thumb for "significant drift".
+For the demo, eight healthy batches had RMSE 0.42-0.50, R² 0.82-0.87, group gap up to 0.14 and PSI up to 0.06,
+so the limits, with a safety margin, are RMSE 0.60, R² 0.70, gap 0.20 and PSI 0.20. A PSI above 0.2 is the common rule of thumb for "significant drift".
 
 ## The agent
 

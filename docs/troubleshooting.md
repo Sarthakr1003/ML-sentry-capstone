@@ -26,6 +26,10 @@ ML Sentry keeps retrying every poll, so it recovers by itself once MLflow is bac
 **`MLflow has no experiment named 'x' yet`**
 `MLFLOW_EXPERIMENT` does not match any experiment. Names are case sensitive. In the demo the experiment
 is created by the first `simulate.py` run.
+If the name is right and the MLflow page shows the experiment, ML Sentry is probably talking to a *different*
+MLflow on the same port. Example: a Docker container (`docker ps` shows one on port 5000) listens on IPv6 as well,
+and on Windows `localhost` tries IPv6 first, so it reaches the container instead of your server on `127.0.0.1`.
+Stop the other one (`docker stop <name>`) and use `http://127.0.0.1:5000` instead of `localhost` in `.env`.
 
 **`MLflow answered 403 ... Invalid Host header` (or a DNS rebinding message)**
 Newer MLflow servers only accept requests addressed to hosts they trust. When ML Sentry runs in Docker it calls

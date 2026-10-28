@@ -54,7 +54,7 @@ Expected: RMSE about 0.48, R² about 0.83.
 mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri sqlite:///mlruns/mlflow.db --default-artifact-root ./mlruns/artifacts --allowed-hosts "localhost:*,127.0.0.1:*,host.docker.internal:*"
 ```
 
-Open http://localhost:5000 to see the MLflow page.
+Open http://127.0.0.1:5000 to see the MLflow page.
 
 **3. Start ML Sentry (window 2):** `docker compose up -d --build` then `docker compose logs -f`, or without Docker: `python -m mlsentry`.
 
