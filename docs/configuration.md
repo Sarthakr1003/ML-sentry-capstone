@@ -45,7 +45,7 @@ so the limits are RMSE 0.60, R² 0.70, gap 0.20 and PSI 0.20. A PSI above 0.2 is
 | Setting | Example | Meaning |
 |---|---|---|
 | `GROQ_API_KEY` | (your key) | Groq is asked first. Leave the placeholder to skip Groq |
-| `GROQ_MODEL` | `llama-3.3-70b-versatile` | Which Groq model to use |
+| `GROQ_MODEL` | `openai/gpt-oss-120b` | Which Groq model to use. Groq retires models over time: if you get "model_not_found", pick a current one from console.groq.com/docs/models |
 | `OLLAMA_HOST` | `http://localhost:11434` | Your local Ollama, the fallback |
 | `OLLAMA_MODEL` | `llama3.1:8b` | A model you have pulled (`ollama list`). Empty = skip Ollama |
 

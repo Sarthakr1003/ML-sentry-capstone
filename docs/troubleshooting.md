@@ -39,6 +39,8 @@ Not an error. See scenarios.md, section 7.
 **`groq could not judge this run (...), trying next option`**
 Groq failed: wrong or missing key (401), no internet, rate limit (429), or the model name in `GROQ_MODEL` was retired.
 ML Sentry moves on to Ollama, so you still get an alert.
+`404 ... model_not_found` means Groq has retired that model (this happened to `llama-3.3-70b-versatile` in Oct 2026):
+set `GROQ_MODEL` to a current one from console.groq.com/docs/models, e.g. `openai/gpt-oss-120b`.
 
 **`ollama could not judge this run (...)`**
 Ollama is not running (`ollama serve`, or open the Ollama app), the model is not pulled (`ollama pull llama3.1:8b`),

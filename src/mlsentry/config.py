@@ -75,7 +75,7 @@ def load_config() -> dict:
         "poll_interval": int(_optional("POLL_INTERVAL_SECONDS", "30")),
         "sqlite_path": sqlite_path,
         "groq_key": _optional("GROQ_API_KEY"),
-        "groq_model": _optional("GROQ_MODEL", "llama-3.3-70b-versatile"),
+        "groq_model": _optional("GROQ_MODEL", "openai/gpt-oss-120b"),
         "ollama_host": _optional("OLLAMA_HOST", "http://localhost:11434"),
         "ollama_model": _optional("OLLAMA_MODEL", "llama3.1:8b"),
         "alert_channels": channels,
