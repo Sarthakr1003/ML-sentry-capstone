@@ -13,8 +13,9 @@ Owner: Sarthak Ramachandra (B.Tech AI&ML, DSU). Teammates Rishabh, Saumyaa, Soni
 - Demo in `examples/california_housing/`: `data_prep.py`, `train_baseline.py` (RMSE 0.476, R2 0.826), `injection.py` (drift/decay/bias), `simulate.py` (batches -> MLflow, PSI via Evidently), `retrain.py`. German Credit files in `examples/german_credit/` are legacy.
 - Docker: built and tested end to end on 27 Oct (container read MLflow on host port 5001, raised drift alerts via host Ollama). Sarthak's other project's containers (`ragops_mlflow` on 5000, `ragops_ollama` on 11434) clash with the demo ports: stop them or use port 5001. Host Ollama sometimes crashes with a CUDA error on first load; the rules fallback covers it.
 - Docs in `docs/`: installation, configuration, running, scenarios, troubleshooting. Tests in `tests/` (`python -m pytest -q`).
-- Sarthak's own `.env` still has the old German Credit settings (`METRICS=accuracy,f1`, `*_THRESHOLD`): it must be updated from `.env.example`. Testing used `state/test.env` via `MLSENTRY_ENV_FILE`.
-- Open: test Docker, real Slack webhook and Groq key, update the KSCST doc for regression, questions for Rishabh/supervisor (PROJECT_CONTEXT.md section 10).
+- 28 Oct: Sarthak's `.env` is on the new format with his own Groq key and Slack webhook (`ALERT_CHANNEL=slack`, channel #all-ml-sentry). Groq model is `openai/gpt-oss-120b` (Groq retired `llama-3.3-70b-versatile`). A live drift run sent 5/5 critical Groq-judged alerts to Slack, then RECOVERED after retraining. Never print `.env` values.
+- Paper: "ML Sentry: Paper Input Pack" Claude Doc (https://claude.ai/artifact/CnUdaVkwSctX7W3cVpKtSc) holds the paper's sections III-VI; still pending there: screenshots S1-S10 / Figs. 3-7 and the severity-grade comparison.
+- Next: screenshots, walk Sarthak through the code module by module with quizzes (viva prep), update the slides. Then optional: Telegram, KSCST doc update for regression, questions for Rishabh/supervisor (PROJECT_CONTEXT.md section 10). `PROGRESS.md` has the full status.
 
 ## How to work with Sarthak (IMPORTANT, overrides your default of doing everything)
 - He is learning and must be able to defend every line at the viva. Explain in plain language, from scratch, before acting. Be concise.
