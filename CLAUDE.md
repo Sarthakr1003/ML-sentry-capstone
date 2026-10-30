@@ -7,15 +7,16 @@ ML Sentry is an open-source, model-agnostic governance layer that runs in Docker
 
 Owner: Sarthak Ramachandra (B.Tech AI&ML, DSU). Teammates Rishabh, Saumyaa, Sonika. Supervisor Dr. Abdul Haq Nalband.
 
-## Current state (26 Oct 2026)
+## Current state (30 Oct 2026)
 - **Phase 1 code is built and pushed** (on 26 Oct Sarthak asked Claude to write all the code; he learns it afterwards, so the next job is walking him through each module and quizzing him).
 - ML Sentry core in `src/mlsentry/`: `config.py`, `mlflow_reader.py` (MLflow REST), `storage.py` (SQLite), `checker.py` (MAX/MIN limits + rule severity), `agent.py` (LangGraph gather -> judge -> write; Groq -> Ollama -> rules), `alerts.py` (console/Slack/Telegram), `__main__.py` (poll loop, `python -m mlsentry`). Installed with `pip install -e .` (pyproject.toml).
 - Demo in `examples/california_housing/`: `data_prep.py`, `train_baseline.py` (RMSE 0.476, R2 0.826), `injection.py` (drift/decay/bias), `simulate.py` (batches -> MLflow, PSI via Evidently), `retrain.py`. German Credit files in `examples/german_credit/` are legacy.
 - Docker: built and tested end to end on 27 Oct (container read MLflow on host port 5001, raised drift alerts via host Ollama). Sarthak's other project's containers (`ragops_mlflow` on 5000, `ragops_ollama` on 11434) clash with the demo ports: stop them or use port 5001. Host Ollama sometimes crashes with a CUDA error on first load; the rules fallback covers it.
 - Docs in `docs/`: installation, configuration, running, scenarios, troubleshooting. Tests in `tests/` (`python -m pytest -q`).
 - 28 Oct: Sarthak's `.env` is on the new format with his own Groq key and Slack webhook (`ALERT_CHANNEL=slack`, channel #all-ml-sentry). Groq model is `openai/gpt-oss-120b` (Groq retired `llama-3.3-70b-versatile`). A live drift run sent 5/5 critical Groq-judged alerts to Slack, then RECOVERED after retraining. Never print `.env` values.
-- Paper: "ML Sentry: Paper Input Pack" Claude Doc (https://claude.ai/artifact/CnUdaVkwSctX7W3cVpKtSc) holds the paper's sections III-VI; still pending there: screenshots S1-S10 / Figs. 3-7 and the severity-grade comparison.
-- Next: screenshots, walk Sarthak through the code module by module with quizzes (viva prep), update the slides. Then optional: Telegram, KSCST doc update for regression, questions for Rishabh/supervisor (PROJECT_CONTEXT.md section 10). `PROGRESS.md` has the full status.
+- Paper: sections III-VI PDF and figures in `docs/paper/`. The team's paper was **submitted 30 Oct to IITCEE 2027 (Paper ID 1389)**, not yet accepted; known wording errors in it are listed in PROGRESS.md.
+- Review-2 slides done: `docs/paper/ML_Sentry_Review2.pptx` (department template, 23 slides).
+- Next: walk Sarthak through the code module by module with quizzes (viva prep), one full demo dry run. Then optional: Telegram, KSCST doc update for regression, questions for Rishabh/supervisor (PROJECT_CONTEXT.md section 10). `PROGRESS.md` has the full status and verified numbers.
 
 ## How to work with Sarthak (IMPORTANT, overrides your default of doing everything)
 - He is learning and must be able to defend every line at the viva. Explain in plain language, from scratch, before acting. Be concise.
