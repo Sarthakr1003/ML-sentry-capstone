@@ -60,15 +60,34 @@ class MLflowReader:
         runs = []
         while True:
             data = self._call("POST", "/runs/search", json=body)
-            for run in data.get("runs", []):
-                info = run["info"]
-                runs.append({
-                    "run_id": info["run_id"],
-                    "run_name": info.get("run_name", info["run_id"][:8]),
-                    "start_time": int(info["start_time"]),
-                    "metrics": {m["key"]: float(m["value"]) for m in run.get("data", {}).get("metrics", [])},
-                })
+            runs.extend(_simple(run) for run in data.get("runs", []))
             token = data.get("next_page_token")
             if not token:
                 return runs
             body["page_token"] = token
+
+    def recent_runs(self, count: int = 20) -> list:
+        """The newest finished runs, newest first (used by the setup wizard to see what is logged)."""
+        body = {
+            "experiment_ids": [self.experiment_id()],
+            "filter": "attributes.status = 'FINISHED'",
+            "order_by": ["attributes.start_time DESC"],
+            "max_results": count,
+        }
+        return [_simple(run) for run in self._call("POST", "/runs/search", json=body).get("runs", [])]
+
+    def experiments(self) -> list:
+        """Names of all active experiments in this MLflow (used by the setup wizard)."""
+        data = self._call("POST", "/experiments/search", json={"max_results": 1000})
+        return [e["name"] for e in data.get("experiments", []) if e.get("lifecycle_stage", "active") == "active"]
+
+
+def _simple(run: dict) -> dict:
+    """Turn one MLflow run into {run_id, run_name, start_time, metrics}."""
+    info = run["info"]
+    return {
+        "run_id": info["run_id"],
+        "run_name": info.get("run_name", info["run_id"][:8]),
+        "start_time": int(info["start_time"]),
+        "metrics": {m["key"]: float(m["value"]) for m in run.get("data", {}).get("metrics", [])},
+    }
