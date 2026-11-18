@@ -1,10 +1,13 @@
-# Start ML Sentry with:  docker compose up -d --build
-# Watch its output with: docker compose logs -f
+# Easiest: run the launcher, which asks the setup questions and then starts ML Sentry:
+#   Windows:      .\mlsentry.cmd          macOS/Linux:  ./mlsentry.sh
+# By hand:
+#   docker compose run --rm mlsentry mlsentry    setup questions / settings menu
+#   docker compose up -d --build                 start watching in the background
+#   docker compose logs -f                       watch its output
 services:
   mlsentry:
     build: .
     container_name: mlsentry
-    env_file: ${MLSENTRY_ENV_FILE:-.env}
     environment:
       # Inside the container "localhost" is the container itself,
       # so MLflow and Ollama are reached on your computer through host.docker.internal
@@ -12,6 +15,8 @@ services:
       OLLAMA_HOST: ${DOCKER_OLLAMA_HOST:-http://host.docker.internal:11434}
       SQLITE_PATH: /app/state/mlsentry.db
     volumes:
+      # Your settings: the setup questions write this file, ML Sentry reads it at start
+      - ${MLSENTRY_ENV_FILE:-./.env}:/app/.env
       - ./state:/app/state
     extra_hosts:
       - "host.docker.internal:host-gateway"
