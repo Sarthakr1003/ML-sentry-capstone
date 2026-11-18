@@ -36,7 +36,10 @@ Judge how serious the problem is:
 Use the metric names to explain the likely cause in plain language, for example:
 error metrics (rmse, mae, r2, accuracy, f1) = the model's predictions got worse;
 drift metrics (psi, drift) = incoming data no longer looks like the data the model learned from;
-gap metrics = the model got much worse for one group than another (a fairness problem).
+gap metrics = the model got much worse for one group than another (a fairness problem);
+RAG metrics (faithfulness, answer_relevancy, context_precision, context_recall, answer_correctness) =
+the LLM's answers or the document retrieval got worse.
+You are also told the type of model (regression, classification or rag) when it is known.
 
 Reply with JSON only, exactly these keys:
 {"severity": "minor|moderate|critical", "reason": "one or two sentences", "action": "one sentence"}"""
@@ -98,6 +101,7 @@ def build_agent(cfg: dict, storage):
 
     def judge(state: AgentState) -> AgentState:
         facts = {
+            "model_type": cfg.get("model_type") or "unknown",
             "run": state["run"]["run_name"],
             "breaches": [{k: b[k] for k in ("metric", "value", "limit", "side")} for b in state["breaches"]],
             "recent_history_oldest_first": state["history"],
