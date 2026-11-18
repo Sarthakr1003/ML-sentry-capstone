@@ -9,14 +9,19 @@ Every POLL_INTERVAL_SECONDS:
      back within bounds after a problem -> a "recovered" message is sent
      (this is the re-check after the user retrains the model)
 
-Run it with:  python -m mlsentry          (keeps running, Ctrl+C to stop)
-              python -m mlsentry --once   (one check, then exit)
+Commands:  mlsentry                 first time: setup questions; afterwards: settings menu
+           mlsentry setup / menu    the same, by name
+           mlsentry watch           keeps watching (Ctrl+C to stop)
+           mlsentry watch --once    one check, then exit
+(`python -m mlsentry ...` works the same.)
 """
 
 import argparse
 import logging
 import sys
 import time
+
+from dotenv import load_dotenv
 
 from .agent import build_agent
 from .alerts import send_alert
@@ -77,20 +82,39 @@ def poll(cfg: dict, reader: MLflowReader, store: Storage, agent, alert_existing:
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="mlsentry", description="Watch a model's MLflow metrics and alert")
-    parser.add_argument("--once", action="store_true", help="check once and exit")
-    parser.add_argument("--alert-existing", action="store_true",
-                        help="on first start, also check runs that already exist in MLflow")
+    commands = parser.add_subparsers(dest="command", metavar="{setup,menu,watch}")
+    commands.add_parser("setup", help="answer the setup questions (first time)")
+    commands.add_parser("menu", help="change the settings")
+    watch_cmd = commands.add_parser("watch", help="start watching the model (keeps running)")
+    watch_cmd.add_argument("--once", action="store_true", help="check once and exit")
+    watch_cmd.add_argument("--alert-existing", action="store_true",
+                           help="on first start, also check runs that already exist in MLflow")
     args = parser.parse_args()
 
-    # Alerts contain emoji; the default Windows console encoding cannot show them
+    # Alerts and the setup questions contain emoji; the default Windows console encoding cannot show them
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+    if args.command == "watch":
+        watch(args.once, args.alert_existing)
+        return
+
+    from .setup_cli import ENV_PATH, run
+    code, start_watching = run(args.command)
+    if start_watching:
+        load_dotenv(ENV_PATH, override=True)  # use the settings that were just saved
+        watch(once=False, alert_existing=False)
+    sys.exit(code)
+
+
+def watch(once: bool, alert_existing: bool) -> None:
+    """Keep checking MLflow every POLL_INTERVAL_SECONDS (the main job of ML Sentry)."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
     logging.getLogger("httpx").setLevel(logging.WARNING)  # hide one line per LLM request
 
     try:
         cfg = load_config()
     except ValueError as error:
-        log.error("Settings problem: %s", error)
+        log.error("Settings problem: %s. Run `mlsentry` to answer the setup questions.", error)
         sys.exit(1)
 
     reader = MLflowReader(cfg["mlflow_uri"], cfg["experiment"])
@@ -103,10 +127,10 @@ def main() -> None:
 
     while True:
         try:
-            poll(cfg, reader, store, agent, args.alert_existing)
+            poll(cfg, reader, store, agent, alert_existing)
         except MLflowError as error:
             log.error("%s. Will try again in %ss.", error, cfg["poll_interval"])
-        if args.once:
+        if once:
             break
         try:
             time.sleep(cfg["poll_interval"])

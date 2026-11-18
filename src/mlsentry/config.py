@@ -68,6 +68,7 @@ def load_config() -> dict:
         sqlite_path = ROOT / sqlite_path
 
     return {
+        "model_type": _optional("MODEL_TYPE"),
         "mlflow_uri": _require("MLFLOW_TRACKING_URI").rstrip("/"),
         "experiment": _require("MLFLOW_EXPERIMENT"),
         "metrics": metrics,

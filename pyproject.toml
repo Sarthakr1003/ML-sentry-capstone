@@ -15,6 +15,7 @@ dependencies = [
     "langgraph",
     "groq",
     "ollama",
+    "questionary",
 ]
 
 [project.scripts]
