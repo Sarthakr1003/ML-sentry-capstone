@@ -3,13 +3,17 @@
 ## A. Normal use: watch your own model (Docker)
 
 1. Your model logs its evaluation metrics to your MLflow (one run per evaluation). Nothing else about your model changes.
-2. Fill in `.env` (see [configuration.md](configuration.md)).
-3. Start ML Sentry:
+2. Run the launcher in the repo folder. It asks the setup questions ([setup_wizard.md](setup_wizard.md)),
+   writes `.env`, and starts ML Sentry in the background:
 
 ```bash
-docker compose up -d --build
+.\mlsentry.cmd        # Windows
+./mlsentry.sh         # macOS / Linux
 ```
 
+   Run it again whenever you want to change a setting; ML Sentry restarts with the new settings.
+   Because ML Sentry runs in a container, start your MLflow with `--host 0.0.0.0` so the container can reach it.
+3. Later restarts without questions: `docker compose up -d`.
 4. Watch what it does:
 
 ```bash
@@ -28,11 +32,13 @@ The history stays in `state/mlsentry.db` on your computer, so a restart carries 
 ## B. Without Docker
 
 ```bash
-python -m mlsentry
+mlsentry              # first time: the setup questions; afterwards: the settings menu
+mlsentry watch        # start watching
 ```
 
-Keeps running and checks every `POLL_INTERVAL_SECONDS`; Ctrl+C stops it.
-`python -m mlsentry --once` checks once and exits (useful for testing or a scheduled task).
+`mlsentry watch` keeps running and checks every `POLL_INTERVAL_SECONDS`; Ctrl+C stops it.
+`mlsentry watch --once` checks once and exits (useful for testing or a scheduled task).
+`python -m mlsentry ...` works the same as `mlsentry ...`.
 
 ## C. The full demo (California Housing)
 
@@ -56,7 +62,11 @@ mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri sqlite:///mlruns/
 
 Open http://127.0.0.1:5000 to see the MLflow page.
 
-**3. Start ML Sentry (window 2):** `docker compose up -d --build` then `docker compose logs -f`, or without Docker: `python -m mlsentry`.
+For ML Sentry in Docker, use `--host 0.0.0.0` instead of `--host 127.0.0.1`, otherwise the container cannot reach MLflow.
+
+**3. Start ML Sentry (window 2):** without Docker: `mlsentry` the first time (setup questions), then `mlsentry watch`.
+With Docker: `.\mlsentry.cmd` then `docker compose logs -f`.
+Tip: run one healthy scenario first (`simulate.py --scenario healthy`), so the experiment exists and its metrics show up in the setup questions.
 
 **4. Play a scenario (window 3):**
 

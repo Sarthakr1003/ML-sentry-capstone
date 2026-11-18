@@ -55,4 +55,4 @@ If a run does not log one of the `METRICS`, ML Sentry checks the others and writ
 ## 7. First start with old results
 
 When ML Sentry starts with an empty history, runs already in MLflow are saved as **history only**, with no alerts,
-so you are not flooded with alerts about the past. Use `python -m mlsentry --alert-existing` if you do want them checked.
+so you are not flooded with alerts about the past. Use `mlsentry watch --alert-existing` if you do want them checked.

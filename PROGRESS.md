@@ -1,6 +1,6 @@
 # ML Sentry: progress so far
 
-Status as of **30 Oct 2026**. Phase 1 deadline: **31 Oct 2026**.
+Status as of **18 Nov 2026**. Phase 1 delivered (Review-2 on 31 Oct). Now: the setup wizard (branch `feature/setup-wizard`).
 For what ML Sentry is and how to use it, see [README.md](README.md) and [docs/](docs/).
 
 ## In one line
@@ -46,6 +46,9 @@ The model is never uploaded, moved or loaded; ML Sentry only reads numbers, so i
 | `127.0.0.1` instead of `localhost` for MLflow | On Windows `localhost` tries IPv6 first and reached another project's container |
 | A problem lasting 3 runs in a row is raised one severity level | Persistent problems matter more than one bad batch |
 | On first start, existing MLflow runs are saved as history without alerts | Avoids flooding the user with alerts about the past |
+| Setup questions in the terminal instead of editing `.env` by hand (Audio 4) | Easier for a new user; every answer is tested before it is saved |
+| The metric list is read from MLflow; metrics the model does not log cannot be picked | A name that does not match what the model logs would never be checked |
+| Model type and experiment are locked after setup | One ML Sentry watches one model; a second model gets its own copy |
 
 ## Done
 
@@ -64,6 +67,8 @@ The model is never uploaded, moved or loaded; ML Sentry only reads numbers, so i
 | Team paper audit (29 Oct) | `Capstone_Project_Paper.pdf` (Downloads) | all metric numbers correct; wording fixes listed below |
 | Paper submitted (30 Oct) | Microsoft CMT | **IITCEE 2027**, Paper ID **1389**; primary area Applications of AI & ML, secondary Software Engineering. This is a submission, not an acceptance yet |
 | Review-2 slides (30 Oct) | `docs/paper/ML_Sentry_Review2.pptx` | 23 slides on the department template, incl. results, Gantt, 12 IEEE references, submission and KSCST screenshots |
+| Telegram alerts (30 Oct) | your `.env` | bot `@mlsentry_dsu_bot`; alerts go to Slack and Telegram |
+| Setup wizard (14-18 Nov) | `src/mlsentry/setup_cli.py`, `checks.py`, `metrics_catalog.py`, `envfile.py`, `mlsentry.cmd/.sh`, `docs/setup_wizard.md` | questions in the terminal write `.env`; settings menu; regression, classification and RAG; 31 tests pass; on branch `feature/setup-wizard` |
 
 ## Verified results (from MLflow and SQLite)
 
@@ -119,6 +124,8 @@ Hardware: i5-12450HX, 16 GB RAM, RTX 4050 laptop.
 | 2 | Full demo dry run on the normal ports (MLflow, ML Sentry in Docker, one scenario, Slack) | 30 min |
 | 3 | Practise the Review-2 presentation; confirm the base paper (SageMaker Model Monitor) and Gantt weeks with the team | 1 hour |
 | 4 | When the paper is accepted: replace the submission screenshot with the acceptance letter; fix the wording errors above | later |
+| 5 | Setup wizard: try it once by hand (local and Docker), then merge `feature/setup-wizard` into `main` ("Create a merge commit") | 1 hour |
+| 6 | Q&A on the setup wizard (steps 1-6) | 1 hour |
 
 Optional: test Telegram; update the KSCST proposal doc for regression; ask Rishabh and the supervisor who presents which part.
 

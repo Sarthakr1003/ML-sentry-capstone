@@ -4,8 +4,11 @@ Each entry: the message you see, what went wrong, and what to check.
 
 ## Settings
 
-**`Settings problem: Missing required setting X in .env (see .env.example)`**
-The setting is not in `.env`, or is empty. Copy the line from `.env.example` into `.env` and fill it in.
+Messages shown while answering the setup questions are explained in [setup_wizard.md](setup_wizard.md#messages-and-what-they-mean).
+
+**`Settings problem: Missing required setting X in .env (see .env.example). Run `mlsentry` to answer the setup questions.`**
+ML Sentry has not been set up yet, or the setting is empty. Run `mlsentry` (Docker: `.\mlsentry.cmd` / `./mlsentry.sh`),
+or copy the line from `.env.example` into `.env` and fill it in.
 Check you are running from the repo folder, and that the file is called exactly `.env` (Windows sometimes saves it as `.env.txt`).
 
 **`Metric 'x' has no limit. Add X_MAX and/or X_MIN to .env`**
@@ -77,6 +80,13 @@ Docker Desktop is not running. Start it and wait until it says "Engine running".
 **Docker Desktop shows an error and quits: `initializing Inference manager ... dockerInference: The file cannot be accessed by the system`**
 A leftover file from an earlier Docker session is locked. Run `wsl --shutdown`, delete
 `%LOCALAPPDATA%\Docker\run\dockerInference`, then start Docker Desktop again. Updating Docker Desktop also helps.
+
+**A folder called `.env` appeared, or `.env` is "not a file" / "is a directory"**
+Docker creates a folder when the mounted `.env` file does not exist yet. Delete the `.env` folder and use the launcher
+(`.\mlsentry.cmd` / `./mlsentry.sh`), which creates the file first.
+
+**`unrecognized arguments: --once` (or `--alert-existing`)**
+These options now belong to the watch command: `mlsentry watch --once`.
 
 **The container keeps restarting**
 Run `docker compose logs mlsentry`. Usually a settings problem (see above).

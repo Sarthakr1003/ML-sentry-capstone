@@ -24,13 +24,15 @@ git clone https://github.com/Sarthakr1003/ML-sentry-capstone.git
 cd ML-sentry-capstone
 ```
 
-Copy the settings template, then fill it in (see [configuration.md](configuration.md)):
+Then run the launcher. It builds the container the first time, asks the setup questions
+([setup_wizard.md](setup_wizard.md)) and starts ML Sentry:
 
 ```bash
-cp .env.example .env
+.\mlsentry.cmd        # Windows
+./mlsentry.sh         # macOS / Linux
 ```
 
-On Windows PowerShell use `copy .env.example .env`. Then see [running.md](running.md).
+No need to edit `.env` by hand; the questions write it for you. See [running.md](running.md) for the rest.
 
 ## Install without Docker (development, or to run the demo)
 
@@ -46,7 +48,7 @@ python -m pip install -e .
 On macOS/Linux activate with `source venv/bin/activate`.
 
 - `requirements.txt` installs everything, including the demo's libraries (scikit-learn, Evidently, MLflow, pytest).
-- `pip install -e .` installs ML Sentry itself, so `python -m mlsentry` works from any folder.
+- `pip install -e .` installs ML Sentry itself, so the `mlsentry` command works (run `mlsentry` for the setup questions).
 
 Check the install:
 
