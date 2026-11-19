@@ -124,7 +124,7 @@ Hardware: i5-12450HX, 16 GB RAM, RTX 4050 laptop.
 | 2 | Full demo dry run on the normal ports (MLflow, ML Sentry in Docker, one scenario, Slack) | 30 min |
 | 3 | Practise the Review-2 presentation; confirm the base paper (SageMaker Model Monitor) and Gantt weeks with the team | 1 hour |
 | 4 | When the paper is accepted: replace the submission screenshot with the acceptance letter; fix the wording errors above | later |
-| 5 | Setup wizard: try it once by hand (local and Docker), then merge `feature/setup-wizard` into `main` ("Create a merge commit") | 1 hour |
+| 5 | Setup wizard: local run by hand done 19 Nov (wizard wrote `.env`, `mlsentry watch` + bias demo gave 5 CRITICAL, then RECOVERED and 1 minor at gap 0.2009, same as the paper). Still to do: try Docker (`.\mlsentry.cmd`), then merge `feature/setup-wizard` into `main` ("Create a merge commit") | 30 min |
 | 6 | Q&A on the setup wizard (steps 1-6) | 1 hour |
 
 Optional: test Telegram; update the KSCST proposal doc for regression; ask Rishabh and the supervisor who presents which part.
