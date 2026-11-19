@@ -112,32 +112,35 @@ You always get an alert.
 ```bash
 git clone https://github.com/Sarthakr1003/ML-sentry-capstone.git
 cd ML-sentry-capstone
-cp .env.example .env        # then edit .env
-docker compose up -d --build
+.\mlsentry.cmd              # Windows      (macOS/Linux: ./mlsentry.sh)
 docker compose logs -f
 ```
 
 Step by step:
 
 1. **Download the code** with `git clone` (above) and open the folder.
-2. **Create your settings file:** `cp .env.example .env` (Windows PowerShell: `copy .env.example .env`).
-3. **Edit `.env`**. The minimum is:
+2. **Run the launcher** (`.\mlsentry.cmd` on Windows, `./mlsentry.sh` on macOS/Linux) and **answer the setup questions**:
 
    ```
-   MLFLOW_TRACKING_URI=http://127.0.0.1:5000     # your MLflow
-   MLFLOW_EXPERIMENT=my-model                   # the experiment your model logs to
-   METRICS=rmse,r2                              # metric names exactly as logged
-   RMSE_MAX=0.60                                # alert if rmse goes above 0.60
-   R2_MIN=0.70                                  # alert if r2 goes below 0.70
-   ALERT_CHANNEL=console                        # or slack, telegram, slack,telegram
+   ? Groq API key (press Enter to skip): ****
+   ? What type of model is ML Sentry watching?   › Regression / Classification / RAG
+   ? Which port is your MLflow running on? 5000
+   ? Which MLflow experiment is your model logging to?   › my-model
+   ? Which metrics should ML Sentry watch?   [x] rmse (latest 0.48)  [x] r2 (latest 0.83)
+   ? Alert if rmse goes ABOVE (latest 0.48): 0.6
+   ? Alert if r2 goes BELOW (latest 0.83): 0.7
+   ? Where should alerts go?   [x] Slack  [x] Telegram
+   ✔ Settings saved to .env.
    ```
 
-   Add `GROQ_API_KEY` and `SLACK_WEBHOOK_URL` (or the Telegram settings) when you want them.
-   Every setting is explained in [docs/configuration.md](docs/configuration.md).
-4. **Start it:** `docker compose up -d --build`
-5. **Watch it:** `docker compose logs -f`. You should see `ML Sentry watching experiment '...'`.
-6. **Stop it:** `docker compose down`. The history stays in `state/mlsentry.db`, so a restart carries on where it stopped.
+   Every answer is tried out first (the Groq key, MLflow, a test message to Slack and Telegram), and only the metrics
+   your model really logs can be picked. The answers are saved in `.env` on your computer; nothing is hand-edited.
+   All questions and messages: [docs/setup_wizard.md](docs/setup_wizard.md).
+3. **ML Sentry starts in the background.** Watch it with `docker compose logs -f`: you should see `ML Sentry watching experiment '...'`.
+4. **Change a setting later:** run the launcher again; it opens a settings menu and restarts ML Sentry.
+5. **Stop it:** `docker compose down`. The history stays in `state/mlsentry.db`, so a restart carries on where it stopped.
 
+Since ML Sentry runs in a container, start your MLflow with `--host 0.0.0.0` so the container can reach it.
 `.env` holds your secrets and is listed in `.gitignore`: never commit it.
 
 ## Connect your own model
@@ -154,13 +157,8 @@ with mlflow.start_run(run_name="weekly-eval-2026-11-02"):
     mlflow.log_metrics({"rmse": 0.48, "r2": 0.83})   # names as listed in METRICS
 ```
 
-Then list those metric names in `METRICS` and give each a limit. For a classifier you might use:
-
-```
-METRICS=accuracy,f1
-ACCURACY_MIN=0.90
-F1_MIN=0.85
-```
+Then run the setup questions: they read these names from MLflow, so you just tick the ones to watch and give each a limit.
+(By hand, the same in `.env`, e.g. for a classifier: `METRICS=accuracy,f1`, `ACCURACY_MIN=0.90`, `F1_MIN=0.85`.)
 
 **Choosing limits:** look at your model's normal numbers first, then set each limit a little outside that range.
 For PSI, 0.2 is the common rule of thumb for significant drift.
@@ -185,7 +183,7 @@ Then, each in its own terminal from the repo folder:
 |---|---|
 | 1. Prepare data and train the model (once) | `python examples/california_housing/data_prep.py` then `python examples/california_housing/train_baseline.py` |
 | 2. Start MLflow (leave it open) | see the full command in [docs/running.md](docs/running.md#c-the-full-demo-california-housing) |
-| 3. Start ML Sentry | `docker compose up -d --build` then `docker compose logs -f` (or `python -m mlsentry`) |
+| 3. Start ML Sentry | `mlsentry` (setup questions, first time only), then `mlsentry watch`. With Docker: `.\mlsentry.cmd` then `docker compose logs -f` |
 | 4. Play a scenario | `python examples/california_housing/simulate.py --scenario drift` |
 | 5. Retrain and re-check | `python examples/california_housing/retrain.py --scenario drift` |
 
@@ -209,6 +207,7 @@ More in [docs/troubleshooting.md](docs/troubleshooting.md).
 | Doc | What it covers |
 |---|---|
 | [docs/installation.md](docs/installation.md) | What you need and how to install |
+| [docs/setup_wizard.md](docs/setup_wizard.md) | The setup questions, the settings menu, and every message they show |
 | [docs/configuration.md](docs/configuration.md) | Every setting in `.env` |
 | [docs/running.md](docs/running.md) | Running ML Sentry, and the full demo step by step |
 | [docs/scenarios.md](docs/scenarios.md) | What happens with drift, decay, bias, recovery and outages |
@@ -224,7 +223,12 @@ src/mlsentry/              ML Sentry itself (this is what runs in Docker)
   checker.py               compares metrics with their limits; simple severity rules
   agent.py                 LangGraph agent that judges severity and writes the alert
   alerts.py                Slack, Telegram and console
-  __main__.py              the polling loop (python -m mlsentry)
+  __main__.py              the commands: mlsentry (setup / menu) and mlsentry watch (the polling loop)
+  setup_cli.py             the setup questions and the settings menu
+  checks.py                tries the answers out: Groq key, MLflow, Slack and Telegram test messages
+  metrics_catalog.py       known metrics per model type, and which way is "better"
+  envfile.py               writes the answers into .env without touching anything else
+mlsentry.cmd, mlsentry.sh  Docker launchers: setup questions, then start ML Sentry
 examples/california_housing/   the demo: data prep, baseline model, fault injection, simulator, retraining
 tests/                     automated tests (python -m pytest -q)
 docs/                      documentation

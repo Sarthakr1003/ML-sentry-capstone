@@ -221,6 +221,7 @@ __marimo__/
 models/
 data/processed/
 .env
+.env.backup
 venv/
 __pycache__/
 context/

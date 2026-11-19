@@ -13,4 +13,5 @@ RUN pip install --no-cache-dir -e .
 RUN useradd --create-home sentry && mkdir -p /app/state && chown sentry /app/state
 USER sentry
 
-CMD ["python", "-m", "mlsentry"]
+# Keep watching. The setup questions run with the launcher (mlsentry.cmd / mlsentry.sh) instead.
+CMD ["mlsentry", "watch"]

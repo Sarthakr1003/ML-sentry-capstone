@@ -4,8 +4,11 @@ Each entry: the message you see, what went wrong, and what to check.
 
 ## Settings
 
-**`Settings problem: Missing required setting X in .env (see .env.example)`**
-The setting is not in `.env`, or is empty. Copy the line from `.env.example` into `.env` and fill it in.
+Messages shown while answering the setup questions are explained in [setup_wizard.md](setup_wizard.md#messages-and-what-they-mean).
+
+**`Settings problem: Missing required setting X in .env (see .env.example). Run `mlsentry` to answer the setup questions.`**
+ML Sentry has not been set up yet, or the setting is empty. Run `mlsentry` (Docker: `.\mlsentry.cmd` / `./mlsentry.sh`),
+or copy the line from `.env.example` into `.env` and fill it in.
 Check you are running from the repo folder, and that the file is called exactly `.env` (Windows sometimes saves it as `.env.txt`).
 
 **`Metric 'x' has no limit. Add X_MAX and/or X_MIN to .env`**
@@ -30,6 +33,11 @@ If the name is right and the MLflow page shows the experiment, ML Sentry is prob
 MLflow on the same port. Example: a Docker container (`docker ps` shows one on port 5000) listens on IPv6 as well,
 and on Windows `localhost` tries IPv6 first, so it reaches the container instead of your server on `127.0.0.1`.
 Stop the other one (`docker stop <name>`) and use `http://127.0.0.1:5000` instead of `localhost` in `.env`.
+
+**MLflow says `Uvicorn running on http://0.0.0.0:5000`, but that link does not open**
+Not an error. `--host 0.0.0.0` means "listen on every address of this computer" (needed when ML Sentry runs in Docker);
+it is a setting, not an address a browser can visit. Type `http://127.0.0.1:5000` in the browser instead.
+If the MLflow page shows no runs, click your experiment (e.g. `california-housing-demo`) in the list: MLflow often opens on the empty `Default` experiment.
 
 **`MLflow answered 403 ... Invalid Host header` (or a DNS rebinding message)**
 Newer MLflow servers only accept requests addressed to hosts they trust. When ML Sentry runs in Docker it calls
@@ -77,6 +85,13 @@ Docker Desktop is not running. Start it and wait until it says "Engine running".
 **Docker Desktop shows an error and quits: `initializing Inference manager ... dockerInference: The file cannot be accessed by the system`**
 A leftover file from an earlier Docker session is locked. Run `wsl --shutdown`, delete
 `%LOCALAPPDATA%\Docker\run\dockerInference`, then start Docker Desktop again. Updating Docker Desktop also helps.
+
+**A folder called `.env` appeared, or `.env` is "not a file" / "is a directory"**
+Docker creates a folder when the mounted `.env` file does not exist yet. Delete the `.env` folder and use the launcher
+(`.\mlsentry.cmd` / `./mlsentry.sh`), which creates the file first.
+
+**`unrecognized arguments: --once` (or `--alert-existing`)**
+These options now belong to the watch command: `mlsentry watch --once`.
 
 **The container keeps restarting**
 Run `docker compose logs mlsentry`. Usually a settings problem (see above).

@@ -1,8 +1,14 @@
 # Configuration
 
 Everything you can change is in **one file, `.env`**, in the repo folder.
-Copy `.env.example` to `.env` and edit it. `.env` holds your secrets (API keys, webhooks),
+**The easy way:** run `mlsentry` (or the Docker launcher `mlsentry.cmd` / `mlsentry.sh`) and answer the setup
+questions; they write `.env` for you ([setup_wizard.md](setup_wizard.md)). This page explains every setting, for when
+you want to edit `.env` by hand (start from `.env.example`). `.env` holds your secrets (API keys, webhooks),
 is listed in `.gitignore`, and must never be committed.
+
+| Setting | Example | Meaning |
+|---|---|---|
+| `MODEL_TYPE` | `regression` | `regression`, `classification` or `rag`. Set by the setup questions; tells the agent what kind of model it judges |
 
 No column name, metric name, threshold or path is written inside the code. That is what makes
 ML Sentry work with any model: you tell it, in `.env`, what to watch.
@@ -58,7 +64,7 @@ If both fail (no key, no internet, Ollama not running), simple rules decide seve
 | `ALERT_CHANNEL` | `slack` | `slack`, `telegram` or `console`; several with commas, e.g. `slack,telegram` |
 | `SLACK_WEBHOOK_URL` | `https://hooks.slack.com/services/...` | Slack: Apps > Incoming Webhooks > Add to a channel |
 | `TELEGRAM_BOT_TOKEN` | `123456:ABC...` | Telegram: create a bot with @BotFather |
-| `TELEGRAM_CHAT_ID` | `123456789` | Your chat with the bot (send it a message, then open `https://api.telegram.org/bot<token>/getUpdates`) |
+| `TELEGRAM_CHAT_ID` | `123456789` | Your chat with the bot. The setup questions find it for you after you send the bot a message (by hand: open `https://api.telegram.org/bot<token>/getUpdates`) |
 
 Alerts are always printed to the console as well.
 

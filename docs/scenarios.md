@@ -39,7 +39,10 @@ This is the "re-check after retraining" working: the team must decide whether th
 **What happens:** prices rise 40% only for coastal districts. The model becomes much worse for coastal houses than inland ones.
 **What ML Sentry sees:** `rmse_gap` jumps from under 0.1 to about 0.6-0.8 (limit 0.2); overall RMSE also rises to about 0.75.
 **Alert:** critical (gap about 3x its limit).
-**After retraining:** the gap falls to about 0.10-0.20, mostly fixed.
+**After retraining:** the gap falls to about 0.10-0.20, mostly fixed. 7 of 8 batches are within the limit; batch 3
+lands just over it (gap 0.2009 against 0.20), so you get one 🟡 **minor** alert ("continue monitoring") between two
+RECOVERED messages. This is expected and the same every run (fixed seed). For a demo with no leftover alert, use drift,
+which recovers on all 8 batches.
 
 ## 5. A metric is missing
 
@@ -55,4 +58,4 @@ If a run does not log one of the `METRICS`, ML Sentry checks the others and writ
 ## 7. First start with old results
 
 When ML Sentry starts with an empty history, runs already in MLflow are saved as **history only**, with no alerts,
-so you are not flooded with alerts about the past. Use `python -m mlsentry --alert-existing` if you do want them checked.
+so you are not flooded with alerts about the past. Use `mlsentry watch --alert-existing` if you do want them checked.
