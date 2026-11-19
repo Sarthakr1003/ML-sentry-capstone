@@ -369,7 +369,7 @@ def menu(env: EnvFile) -> bool:
             Choice("Save and exit", value="save"),
             Choice("Exit without saving", value="quit"),
             Separator("── locked: one ML Sentry watches one model ──"),
-            Choice(f"Model type: {model_type}", disabled="clone ML Sentry again in another folder for another model"),
+            Choice(f"Model type: {model_type}", disabled="locked"),
             Choice(f"Experiment: {env.get('MLFLOW_EXPERIMENT')}", disabled="locked"),
         ]))
         if choice == "save":

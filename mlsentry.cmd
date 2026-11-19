@@ -9,10 +9,10 @@ rem Docker would create a folder named .env if the file did not exist yet
 if not exist .env type nul > .env
 if not exist state mkdir state
 
-docker compose run --rm mlsentry mlsentry %*
+docker compose run --rm --build mlsentry mlsentry %*
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-docker compose up -d --force-recreate
+docker compose up -d --build --force-recreate
 echo.
 echo ML Sentry is watching your model in the background.
 echo   See what it does:   docker compose logs -f

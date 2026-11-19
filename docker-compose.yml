@@ -1,7 +1,7 @@
 # Easiest: run the launcher, which asks the setup questions and then starts ML Sentry:
 #   Windows:      .\mlsentry.cmd          macOS/Linux:  ./mlsentry.sh
 # By hand:
-#   docker compose run --rm mlsentry mlsentry    setup questions / settings menu
+#   docker compose run --rm --build mlsentry mlsentry    setup questions / settings menu
 #   docker compose up -d --build                 start watching in the background
 #   docker compose logs -f                       watch its output
 services:

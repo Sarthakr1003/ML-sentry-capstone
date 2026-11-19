@@ -10,9 +10,9 @@ cd "$(dirname "$0")"
 [ -f .env ] || touch .env
 mkdir -p state
 
-docker compose run --rm mlsentry mlsentry "$@"
+docker compose run --rm --build mlsentry mlsentry "$@"
 
-docker compose up -d --force-recreate
+docker compose up -d --build --force-recreate
 echo
 echo "ML Sentry is watching your model in the background."
 echo "  See what it does:   docker compose logs -f"
