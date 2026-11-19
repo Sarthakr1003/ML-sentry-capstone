@@ -34,6 +34,11 @@ MLflow on the same port. Example: a Docker container (`docker ps` shows one on p
 and on Windows `localhost` tries IPv6 first, so it reaches the container instead of your server on `127.0.0.1`.
 Stop the other one (`docker stop <name>`) and use `http://127.0.0.1:5000` instead of `localhost` in `.env`.
 
+**MLflow says `Uvicorn running on http://0.0.0.0:5000`, but that link does not open**
+Not an error. `--host 0.0.0.0` means "listen on every address of this computer" (needed when ML Sentry runs in Docker);
+it is a setting, not an address a browser can visit. Type `http://127.0.0.1:5000` in the browser instead.
+If the MLflow page shows no runs, click your experiment (e.g. `california-housing-demo`) in the list: MLflow often opens on the empty `Default` experiment.
+
 **`MLflow answered 403 ... Invalid Host header` (or a DNS rebinding message)**
 Newer MLflow servers only accept requests addressed to hosts they trust. When ML Sentry runs in Docker it calls
 `host.docker.internal`, so start MLflow with `--allowed-hosts "localhost:*,127.0.0.1:*,host.docker.internal:*"` (see running.md).
