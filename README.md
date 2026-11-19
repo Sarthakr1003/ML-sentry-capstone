@@ -1,6 +1,15 @@
-# ML Sentry
+<h1 align="center">🛡️ ML Sentry</h1>
 
-**An open-source, model-agnostic agentic governance layer for machine learning models in production.**
+<p align="center">
+  <b>An open-source, model-agnostic agentic governance layer for machine learning models in production.</b>
+</p>
+
+<p align="center">
+  <img alt="Docker" src="https://img.shields.io/badge/runs%20in-Docker-2496ED?logo=docker&logoColor=white">
+  <img alt="MLflow" src="https://img.shields.io/badge/reads%20from-MLflow-0194E2?logo=mlflow&logoColor=white">
+  <img alt="LangGraph" src="https://img.shields.io/badge/agent-LangGraph-1C3C3C">
+  <img alt="Alerts" src="https://img.shields.io/badge/alerts-Slack%20%7C%20Telegram%20%7C%20Console-4A154B">
+</p>
 
 ML Sentry runs in Docker next to a model that is already live. It reads the model's evaluation metrics from
 your own MLflow, keeps their history, and when a metric goes out of bounds an LLM agent judges how serious it is
@@ -33,6 +42,9 @@ your model ──logs metrics──> your MLflow <──reads (HTTP)── ML Se
 - [Common problems](#common-problems)
 - [Documentation](#documentation)
 - [Repository layout](#repository-layout)
+- [Team](#team)
+
+---
 
 ## How it works
 
@@ -217,3 +229,16 @@ examples/california_housing/   the demo: data prep, baseline model, fault inject
 tests/                     automated tests (python -m pytest -q)
 docs/                      documentation
 ```
+
+## Team
+
+ML Sentry is a B.Tech (AI & ML) capstone project at Dayananda Sagar University, Bengaluru.
+
+| Name | GitHub |
+|---|---|
+| Sarthak Ramachandra | [@Sarthakr1003](https://github.com/Sarthakr1003) |
+| Rishabh Soraganvi | [@rishsoraganvi](https://github.com/rishsoraganvi) |
+| Saumyaa | [@saumyaapriyadarshinee] (https://github.com/saumyaapriyadarshinee)
+| Sonika D. | _add your GitHub handle_ |
+
+**Supervisor:** Dr. Abdul Haq Nalband
