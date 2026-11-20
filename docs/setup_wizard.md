@@ -27,7 +27,7 @@ Press **Ctrl+C** at any time to stop: nothing is saved until you confirm at the 
 | 5 | Which metrics should ML Sentry watch? | **Yes**, at least one | Tick with Space, confirm with Enter | Only names your model really logs can be ticked |
 | 5b | For "x", which is better? | Only for metrics ML Sentry does not know | Lower or higher is better | – |
 | 6 | Alert if x goes ABOVE / BELOW | **Yes**, one per metric | A number. The suggestion in the box is a little worse than your model's latest value | Must be a number in a sensible range |
-| 7 | Where should alerts go? | Optional | Slack and/or Telegram (none = only the terminal / Docker logs) | – |
+| 7 | Where should alerts go? | Optional | Slack and/or Telegram: press **Space** to tick each one (`● Slack`), then Enter. Enter with nothing ticked = only the terminal / Docker logs | – |
 | 7a | Slack webhook URL | For Slack | From your Slack app: Incoming Webhooks | Sends a test message |
 | 7b | Telegram bot token | For Telegram | From @BotFather. Then send your bot any message and press Enter | Finds your chat ID by itself, sends a test message |
 | 8 | Change advanced settings? | Optional | How often to check MLflow (default every 10 s), the local Ollama model | – |

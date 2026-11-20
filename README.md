@@ -37,6 +37,7 @@ your model ──logs metrics──> your MLflow <──reads (HTTP)── ML Se
 - [What an alert looks like](#what-an-alert-looks-like)
 - [What you need](#what-you-need)
 - [Quick start](#quick-start)
+- [The setup questions: Docker or local](#the-setup-questions-docker-or-local)
 - [Connect your own model](#connect-your-own-model)
 - [Try the demo](#try-the-demo)
 - [Common problems](#common-problems)
@@ -142,6 +143,33 @@ Step by step:
 
 Since ML Sentry runs in a container, start your MLflow with `--host 0.0.0.0` so the container can reach it.
 `.env` holds your secrets and is listed in `.gitignore`: never commit it.
+
+## The setup questions: Docker or local
+
+The first time you start ML Sentry, it asks a short questionnaire in the terminal and writes your answers into `.env`
+for you. The questions are the same whether ML Sentry runs in Docker or locally; only the commands differ.
+
+| | Docker | Local (Python venv) |
+|---|---|---|
+| Start the questions | `.\mlsentry.cmd` (Windows) or `./mlsentry.sh` (macOS/Linux) | `mlsentry` |
+| Where they run | in a short-lived container; your `.env` on your computer is shared with it | in your own terminal |
+| After you save | the launcher starts ML Sentry in the background; watch it with `docker compose logs -f` | it asks "Start watching your model now?"; later, start it with `mlsentry watch` |
+| Start your MLflow with | `--host 0.0.0.0`, so the container can reach it | `--host 127.0.0.1` is enough |
+| Change a setting later | run the launcher again: it opens the settings menu and restarts ML Sentry | run `mlsentry` again: it opens the settings menu |
+
+How it works:
+
+1. **First time** (no `MODEL_TYPE` in `.env` yet): the questions. **Every time after that:** a settings menu instead.
+2. **The order:** Groq key (optional), model type, MLflow port, experiment, metrics, a limit for each metric, alerts
+   (Slack and/or Telegram), advanced settings (optional), then a summary.
+3. **Each answer is tried out** before moving on: the Groq key, the MLflow connection, and a test message to Slack and Telegram.
+   The metric list is read from your MLflow, so only metrics your model really logs can be picked.
+4. **Limits are asked one metric at a time, in alphabetical order.** Read the metric name and ABOVE/BELOW before typing.
+5. **Alerts are a checkbox list:** press **Space** to tick Slack and/or Telegram, then **Enter**. Nothing ticked means
+   alerts only show in the terminal (or Docker logs).
+6. **Nothing is saved until you choose "Yes, save".** Ctrl+C or "Cancel" leaves `.env` as it was.
+7. **One `.env` for both:** set up locally and Docker uses the same settings, and the other way round.
+8. **Model type and experiment are locked** after setup: one ML Sentry watches one model.
 
 ## Connect your own model
 
